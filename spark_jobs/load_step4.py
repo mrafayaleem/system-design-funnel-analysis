@@ -4,7 +4,7 @@ from datetime import datetime
 
 assert sys.version_info >= (3, 5)  # make sure we have Python 3.5+
 
-spark = SparkSession.builder.appName('users table extract').getOrCreate()
+spark = SparkSession.builder.appName('step4 table extract').getOrCreate()
 assert spark.version >= '2.3'  # make sure we have Spark 2.3+
 
 sqlCtx = SQLContext(spark)
@@ -23,13 +23,13 @@ def load_table(table):
 def table_to_parquet(df):
     file_suffix = datetime.today().strftime('%Y-%m-%d')
     df.write.parquet(
-        '/Users/aleemr/powerhouse/interviews/jerry-coding-challenge/spark_jobs/output/users-{}'.format(
+        '/Users/aleemr/powerhouse/interviews/jerry-coding-challenge/spark_jobs/output/step4-{}'.format(
             file_suffix
         ))
 
 
 def main():
-    table_to_parquet(load_table("users"))
+    table_to_parquet(load_table("step4"))
 
 
 if __name__ == '__main__':
