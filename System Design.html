@@ -14308,7 +14308,7 @@ a.anchor-link {
 </div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
 <p>For the scenario described in the problem, I have assumed that some sort of event tracking is implemented in the OLTP database as follows:</p>
 <ul>
-<li>Whenever a logged in user visits a certain page in the funnel, an event is populated with its user id, date, sex, channel and the page. This happens on each of the page that is part of the funnel</li>
+<li>Whenever a logged in user visits a certain page in the funnel, an event is populated with its user id, date, sex, channel, device and the page. This happens on each of the page that is part of the funnel</li>
 <li>For now, I have assumed it to be a single product (for e.g. insurance policy purchase) but this can be extended to multiple products as well</li>
 <li>Ideally, I would want each event to be tracked via some sort of a cart session so multiple sessions for a user can be tracked but this isn't the case for now</li>
 </ul>
@@ -14559,6 +14559,25 @@ a.anchor-link {
 <div class="jp-Cell-inputWrapper"><div class="jp-InputPrompt jp-InputArea-prompt">
 </div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
 <p>Following queries show some funnel analysis that I could think of using the dimension model tables stored in what I call the Datawarehouse. Headings are self-explanatory for what I am trying to do in the analysis.</p>
+
+</div>
+</div>
+<div class="jp-Cell-inputWrapper"><div class="jp-InputPrompt jp-InputArea-prompt">
+</div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
+<h3 id="Adding-and-modifying-columns-before-generating-tables-in-warehouse">Adding and modifying columns before generating tables in warehouse<a class="anchor-link" href="#Adding-and-modifying-columns-before-generating-tables-in-warehouse">&#182;</a></h3>
+</div>
+</div>
+<div class="jp-Cell-inputWrapper"><div class="jp-InputPrompt jp-InputArea-prompt">
+</div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
+<p>Before loading tables in the warehouse, I modified and generated a few columns based on the funnel analysis I was expecting to do. This is where I believe a raw Data Lake shines out in the sense that teams can create tables in warehouse according to their needs.</p>
+<ul>
+<li>Converted date strings to date type using Spark udf
+<pre><code>string_to_date = udf(lambda x: datetime.strptime(x, '%Y-%m-%d'), types.DateType())</code></pre>
+</li>
+<li>Added an extra column to mark a visit. Note that we can even add an aggregation to this fact table if we want to such that we get optimized queries when performing joins
+<pre><code>step1_fact = step1_fact.withColumn("visited", lit(1))</code></pre>
+</li>
+</ul>
 
 </div>
 </div>
